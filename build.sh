@@ -18,6 +18,13 @@ sudo make install
 make -j$(nproc)
 sudo make install
 
+cd ..
+
 sudo mv /opt/nginx .
 
-# sudo docker build -t nginx:v1.22.1 .
+sudo docker build -t nginx:v1.22.1 .
+
+sudo rm -rf nginx-1.22.1
+sudo rm -rf nginx-http-flv-module-1.2.11
+sudo rm -rf nginx-rtmp-module-1.2.2
+sudo rm -rf nginx

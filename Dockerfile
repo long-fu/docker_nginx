@@ -1,17 +1,19 @@
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
-RUN apt-get update && apt-get -y upgrade && apt-get install -y openssl && mkdir /opt/nginx
+USER root
 
-COPY nginx /opt/nginx
+ADD nginx-1.22.1.tar.gz /tmp
+ADD nginx-http-flv-module-1.2.11.tar.gz /tmp
+ADD nginx-rtmp-module-1.2.2.tar.gz /tmp
+
+RUN apt-get update && apt-get -y upgrade  && apt-get install -y  gcc openssh-server lrzsz tree  openssl libssl-dev libpcre3 libpcre3-dev zlib1g-dev unzip zip make && cd /tmp/nginx-1.22.1 && ./configure --prefix=/opt/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_mp4_module --add-module=../nginx-rtmp-module-1.2.2 && make && make install && mv /tmp/nginx-rtmp-module-1.2.2 /opt/nginx/nginx-rtmp-module
+
+COPY nginx.conf /opt/nginx/conf
 
 WORKDIR /opt/nginx
 
 EXPOSE 80 443 1935 554
 
-VOLUME [ "/opt/nginx/conf", "/opt/nginx/html" , "/opt/nginx/logs"]
-
-USER root
-
-# ENTRYPOINT ["/opt/nginx/sbin/nginx"]
+VOLUME ["/opt/nginx/html"]
 
 CMD ["/opt/nginx/sbin/nginx", "-g", "daemon off;"]

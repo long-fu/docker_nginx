@@ -1,6 +1,5 @@
-#!/bin/bash
+!/bin/bash
 
-# sudo rm -rf nginx
 # sudo rm -rf nginx-1.22.1
 # sudo rm -rf nginx-http-flv-module-1.2.11
 # sudo rm -rf nginx-rtmp-module-1.2.2

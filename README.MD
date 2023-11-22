@@ -10,6 +10,9 @@
 # 测试脚本
 ./run.sh
 ./stop.sh
+
+# 导出镜像安装包
+./export_install.sh
 ```
 
 ## 更新

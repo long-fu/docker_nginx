@@ -4,6 +4,6 @@
 
 ./export_docker.sh
 
-mv nginx-1_22_1.tar ./nginx_install
+mv nginx-1_22_1_$(arch).tar ./nginx_install
 
-tar -czvf nginx_install.tar.gz nginx_install
+tar -czvf nginx_install_$(arch).tar.gz nginx_install

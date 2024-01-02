@@ -1,26 +1,34 @@
 FROM ubuntu:18.04
 
-USER root
+RUN umask 0022 && \
+    groupadd  HwHiAiUser -g 1000 && \
+    useradd -d /home/HwHiAiUser -u 1000 -g 1000 -m -s /bin/bash HwHiAiUser && \
+    groupadd HwDmUser -g 1101 && \
+    useradd -d /home/HwDmUser -u 1101 -g 1101 -m -s /bin/bash HwDmUser && \
+    usermod -aG HwDmUser HwHiAiUser && \
+    groupadd HwBaseUser -g 1102 && \
+    useradd -d /home/HwBaseUser -u 1102 -g 1102 -m -s /bin/bash HwBaseUser && \
+    usermod -aG HwBaseUser HwHiAiUser
 
 ADD nginx-1.22.1.tar.gz /tmp
 ADD nginx-http-flv-module-1.2.11.tar.gz /tmp
-ADD nginx-rtmp-module-1.2.2.tar.gz /tmp
 
 RUN apt-get update && apt-get -y upgrade  && apt-get install -y  \
     gcc openssh-server lrzsz tree  openssl libssl-dev libpcre3 libpcre3-dev zlib1g-dev unzip zip make && \
+    mkdir -p /app && \
     cd /tmp/nginx-1.22.1 && \
-    ./configure --prefix=/opt/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_mp4_module --add-module=../nginx-rtmp-module-1.2.2 && \
+    ./configure --prefix=/app/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_mp4_module --add-module=../nginx-http-flv-module-1.2.11 && \
     make && make install && \
-    ./configure --prefix=/opt/nginx --add-module=../nginx-http-flv-module-1.2.11 && \
-    make && make install && \
-    cd /tmp && rm -rf nginx-1.22.1 && rm -rf nginx-http-flv-module-1.2.11 && rm -rf nginx-rtmp-module-1.2.2
+    cd /tmp && rm -rf nginx-1.22.1 && rm -rf nginx-http-flv-module-1.2.11
 
-COPY nginx.conf /opt/nginx/conf
+COPY nginx.conf /app/nginx/conf
 
-WORKDIR /opt/nginx
+WORKDIR /app/nginx
 
 EXPOSE 8080 1935 8081
 
-VOLUME ["/opt/nginx/html"]
+VOLUME ["/app/nginx/html"]
 
-CMD ["/opt/nginx/sbin/nginx", "-g", "daemon off;"]
+USER 1000
+
+CMD ["/app/nginx/sbin/nginx", "-g", "daemon off;"]

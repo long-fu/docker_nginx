@@ -23,6 +23,8 @@ RUN apt-get update && apt-get -y upgrade  && apt-get install -y  \
 
 COPY nginx.conf /app/nginx/conf
 
+COPY html /app/nginx/html
+
 WORKDIR /app/nginx
 
 EXPOSE 8080 1935 8081

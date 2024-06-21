@@ -6,3 +6,5 @@ nginx-1_22_1.tar
 nginx_install.tar.gz
 html/
 nginx-1_22_1_aarch64.tar
+ota_html/
+docker_images/

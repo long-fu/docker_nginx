@@ -24,12 +24,13 @@ RUN apt-get update && apt-get -y upgrade  && apt-get install -y  \
 COPY nginx.conf /app/nginx/conf
 
 COPY html /app/nginx/html
+COPY ota_html /app/nginx/ota_html
 
 WORKDIR /app/nginx
 
-EXPOSE 8080 1935 8081
+EXPOSE 8080 1935 8081 8086
 
-VOLUME ["/app/nginx/html"]
+VOLUME ["/app/nginx/html","/app/nginx/ota_html"]
 
 USER 1000
 

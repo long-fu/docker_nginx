@@ -29,3 +29,9 @@ docker run -it --rm -u root --name nginx \
  -v $(pwd)/html:/app/nginx/html \
  nginx:v1.22.1 \
  /bin/bash
+
+docker run -d -u root --restart always --name nginx \
+ --net=host \
+ -v $(pwd)/html:/app/nginx/html \
+ -v $(pwd)/ota_html:/app/nginx/ota_html \
+ nginx-flv-web:v1.2.11

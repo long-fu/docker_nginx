@@ -1,0 +1,25 @@
+FROM ubuntu:18.04
+
+ADD nginx-1.22.1.tar.gz /tmp
+ADD nginx-http-flv-module-1.2.11.tar.gz /tmp
+
+RUN apt-get update && apt-get -y upgrade  && apt-get install -y  \
+    gcc openssh-server lrzsz tree  openssl libssl-dev libpcre3 libpcre3-dev zlib1g-dev unzip zip make && \
+    mkdir -p /app && \
+    cd /tmp/nginx-1.22.1 && \
+    ./configure --prefix=/app/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_mp4_module --add-module=../nginx-http-flv-module-1.2.11 && \
+    make && make install && \
+    cd /tmp && rm -rf nginx-1.22.1 && rm -rf nginx-http-flv-module-1.2.11
+
+COPY nginx.conf /app/nginx/conf
+
+COPY html /app/nginx/html
+COPY ota_html /app/nginx/ota_html
+
+WORKDIR /app/nginx
+
+EXPOSE 8080 1935 8081 8086
+
+VOLUME ["/app/nginx/html", "/app/nginx/ota_html"]
+
+CMD ["/app/nginx/sbin/nginx", "-g", "daemon off;"]
